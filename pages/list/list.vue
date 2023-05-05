@@ -79,7 +79,7 @@
 </template>
 
 <script>
-	import XlsExport from 'xlsexport';
+	// import XlsExport from 'xlsexport';
 	// import { createRequire } from 'module';
 	
 	export default {
@@ -236,5 +236,4 @@
 		border-radius: 5px;
 		box-sizing: border-box;
 	}
->>>>>>> mlhone
 </style>
