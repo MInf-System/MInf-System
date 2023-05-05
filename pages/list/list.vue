@@ -164,7 +164,7 @@
 				console.log("***************保存Excel数据中。。。****************")
 				console.log("*数据=>",data);
 				
-				// const fs = require('fs');
+				const fs = require('fs');
 				
 				console.log("加载Excel工具");
 				const ExcelJS = require('xlsx');
