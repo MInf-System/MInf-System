@@ -230,12 +230,12 @@
 				// 一定需要excel文件存在
 				XLSX.writeFile(workbook, databaseFile);
 				
-				
+				// 只能保存文件，不能新增
 				// 将 workbook 转换成二进制数据
+				
 				// const wbout = XLSX.write(workbook, {bookType:'xlsx', type:'array'});
 				
 				// 定义保存文件的文件名和文件类型
-				// 只能保存文件，不能新增
 				// uni.saveFile({
 				//   tempFilePath: '/static/data/data.xlsx',
 				//   filePath: '/static/data/data.xlsx',
@@ -257,55 +257,9 @@
 				
 				
 				console.log("保存excel");
-				
-				// const databaseLocd = '@/data.xlsx';
-				// workbook.xlsx.readFile(databaseLocd).then(() => {
-				//     const worksheet = workbook.getWorksheet('data');
-				// 	console.log('获取Excel工作表=>',worksheet)
-				//     worksheet.addRow(data);
-				// 	console.log('追加数据=>成功')
-				//     return workbook.xlsx.writeFile(databaseLocd);
-				//   }).then(() => {
-				//     console.log('File updated!');
-				//   }).catch((error) => {
-				//     console.log('Error:', error);
-				//     console.log('Error:', error.message);
-				//   });
 
 				console.log("***************保存Excel数据---成功。。。****************")
 			},
-			
-			// saveExcel(data){
-			// 	console.log("***************保存Excel数据中。。。****************")
-			// 	console.log("*数据=>",data);
-			// 	const XLSX = require('xlsx');
-			// 	console.log("Excel工具=>",XLSX);
-			// 	// 读取现有Excel文件
-			// 	const workbook = XLSX.readFile('@/static/data.xlsx');
-				
-			// 	console.log("Excel=>",workbook,"workbook.SheetNames",workbook.SheetNames);
-			// 	// 选择要追加数据的工作表
-			// 	const worksheet = workbook.Sheets['data'];
-				
-			// 	// 将数据转换为二维数组
-			// 	// const data = [
-			// 	//   ['New Value 1', 'New Value 2', 'New Value 3'],
-			// 	//   ['New Value 4', 'New Value 5', 'New Value 6'],
-			// 	// ];
-				
-			// 	// 获取工作表的最后一行的索引
-			// 	const lastRowIndex = worksheet['!ref'].split(':')[1].slice(1);
-				
-			// 	console.log("获取工作表的最后一行的索引=>",lastRowIndex);
-			// 	// 将新数据追加到工作表中
-			// 	XLSX.utils.sheet_add_aoa(worksheet, data, { origin: +lastRowIndex + 1 });
-				
-			// 	console.log("将新数据追加到工作表中=>",成功);
-			// 	// 保存Excel文件
-			// 	XLSX.writeFile(workbook, '@/static/data.xlsx');
-			// 	console.log("***************保存Excel数据---成功。。。****************")
-			// },
-			
 			formReset: function(e) {
 				console.log('清空数据')
 			}
