@@ -1,0 +1,19 @@
+{
+    "id": "x-kvite",
+    "name": "kvite（基于sqlite的kv型数据库，支持增删查改，多数据库，多表等操作）",
+    "version": "v0.0.5",
+    "description": "一个基于uni-app plus.sqlite 的kv数据库，支持增删查改，多数据库，多表，自定义序列化器，反序列化器等（球球给个星星）",
+    "keywords": [
+        "sqlite",
+        "存储",
+        "kv",
+        "数据库",
+        "增删查改"
+    ],
+    "dcloudext": {
+        "category": [
+            "JS SDK",
+            "通用 SDK"
+        ]
+    }
+}
