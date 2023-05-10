@@ -2,7 +2,15 @@
 	<view class="content">
 		<view class="text-area">
 			<text class="title">{{title}}</text>
+			
 			<button size="mini" type="default" @click="delTable"></button>
+			
+			<uni-section title="基本用法" type="line">
+				<uni-search-bar @confirm="search" :focus="true" v-model="searchValue">
+				</uni-search-bar>
+	
+			</uni-section>
+			
 			<scroll-view class="scroll-view_H" scroll-x="true" @scroll="scroll" scroll-left="120">
 				<view class="uni-container">
 					<uni-table ref="table" :loading="loading" border stripe type="selection" emptyText="暂无更多数据" @selection-change="selectionChange">
@@ -35,25 +43,14 @@
 							<uni-td>{{ item.value.intention }}</uni-td>
 							<uni-td>
 								<view class="uni-group">
-									<!-- <navigator url="pages/index/updateData?key = key" hover-class="navigator-hover">
-										<button class="uni-button" size="mini" type="primary" @click="updatedata(item.key)">修改</button>
-									</navigator> -->
 									<button class="uni-button" size="mini" type="primary" @click="updatedata(item)">修改</button>
 									<button class="uni-button" size="mini" type="warn" @click="deletedata(item.key)">删除</button>
 								</view>
 							</uni-td>
 						</uni-tr>
 					</uni-table>
-					<view class="uni-pagination-box"><uni-pagination prev-text="前一页" next-text="后一页" show-icon :page-size="pageSize" :current="pageCurrent" :total="total" @change="change" /></view>
+					<!-- <view class="uni-pagination-box"><uni-pagination prev-text="前一页" next-text="后一页" show-icon :page-size="pageSize" :current="pageCurrent" :total="total" @change="change" /></view> -->
 				</view>
-				<!-- <view> -->
-					<!-- 修改弹出框 -->
-					<!-- <uni-popup ref="inputDialog" type="dialog">
-						
-						<uni-popup-dialog ref="inputClose"  mode="input" title="输入修改内容" value="对话框预置提示内容!"
-							placeholder="请输入内容" @confirm="dialogInputConfirm"></uni-popup-dialog>
-					</uni-popup> -->
-				<!-- </view> -->
 			</scroll-view>
 		</view>
 	</view>
@@ -71,14 +68,14 @@
 					scrollTop: 0
 				},
 				Key: 0,
-				searchVal: '',
+				searchValue: '方家组',
 				tableData: [],
-				// 每页数据量
-				pageSize: 4,
-				// 当前页
-				pageCurrent: 1,
-				// 数据总量
-				total: 10,
+				// // 每页数据量
+				// pageSize: 4,
+				// // 当前页
+				// pageCurrent: 1,
+				// // 数据总量
+				// total: 10,
 				loading: false
 			}
 		},
@@ -95,6 +92,7 @@
 				uni.navigateTo({
 					url: url
 				});
+				this.getData(1);
 			},
 			
 			//删除单行数据
@@ -105,18 +103,51 @@
 				const tableName = userTable.tableName;
 				//删除该行，防止出现唯一性约束异常
 				await userTable.remove(e);
-				//更新记录
-				await userTable.executeSQL(
-					`UPDATE ${tableName} SET key = (key - 1) WHERE key > ${e}`
-				);
+				// //更新记录
+				// await userTable.executeSQL(
+				// 	`UPDATE ${tableName} SET key = (key - 1) WHERE key > ${e}`
+				// );
 				//查询总记录数
 				const all = await userTable.size();
 				console.log("总数据", all);
-				console.log("全部数据结构", await userTable.entries());
+				// console.log("全部数据结构", await userTable.entries());
 				// //删除最后一行
 				// await userTable.remove(all);
 				//重新访问分页数据
 				this.getData(1);
+			},
+			
+			// input(res) {
+			// 	console.log('----input:', res)
+			// },
+			// clear(res) {
+			// 	uni.showToast({
+			// 		title: 'clear事件，清除值为：' + res.value,
+			// 		icon: 'none'
+			// 	})
+			// },
+			// blur(res) {
+			// 	uni.showToast({
+			// 		title: 'blur事件，输入值为：' + res.value,
+			// 		icon: 'none'
+			// 	})
+			// },
+			// focus(e) {
+			// 	uni.showToast({
+			// 		title: 'focus事件，输出值为：' + e.value,
+			// 		icon: 'none'
+			// 	})
+			// },
+			// cancel(res) {
+			// 	uni.showToast({
+			// 		title: '点击取消，输入值为：' + res.value,
+			// 		icon: 'none'
+			// 	})
+			// },
+			// 搜索
+			search() {
+				console.log("触发搜索");
+				this.getData(1, this.searchValue)
 			},
 			
 			// 多选处理
@@ -132,40 +163,74 @@
 			delTable() {
 				console.log(this.selectedItems())
 			},
-			// 分页触发
-			change(e) {
-				console.log("分页触发", e);
-				this.$refs.table.clearSelection();
-				this.selectedIndexs.length = 0;
-				this.getData(e.current);
-			},
-			// 搜索
-			search() {
-				this.getData(1, this.searchVal)
-			},
+			// // 分页触发
+			// change(e) {
+			// 	console.log("分页触发", e);
+			// 	this.$refs.table.clearSelection();
+			// 	this.selectedIndexs.length = 0;
+			// 	this.getData(e.current);
+			// },
 			scroll: function(e) {
 				// console.log(e)
 				// this.old.scrollTop = e.detail.scrollTop
 			},
-			//获取分页数据
+			//获取数据
 			async getData(pageCurrent, value = '') {
+				
 				const userTable = await Kvite.buildDefaultKvite('testDb', 'user');
+				
 				this.loading = true;
-				this.pageCurrent = pageCurrent;
-				
-				//最下行
-				const low = (pageCurrent - 1) * this.pageSize;
-				//最上行
-				const heigh = low + this.pageSize + 1;
-				console.log("最高和最低值", low, heigh);
-				console.log("开始查询");
-				const pagingData = await userTable.allpaging(low, heigh);
-				console.log("查询结果", pagingData);
-				this.tableData = pagingData;
-				this.loading = false;
-				
-			}
+				if(value.length == 0){
+					console.log("非搜索查询");
+					const pagingData = await userTable.entries();
+					this.tableData = pagingData;
+					this.loading = false;
+				}else{
+					console.log("搜索查询");
+					this.searchData(value);
+				}
+			},
 			
+			//搜索功能
+			async searchData(value){
+				console.log("value值=>", value);
+				const userTable = await Kvite.buildDefaultKvite('testDb', 'user');
+				//获取数据库表名
+				const tableName = userTable.tableName;
+				console.log("开始模糊匹配");
+				const serializedValue = userTable.valueSerializer(value);
+				const res = await userTable.selectSQL(
+					// `UPDATE ${tableName} SET key = (key - 1) WHERE key > ${e}`
+					`SELECT key, value FROM ${tableName} WHERE value LIKE '%${serializedValue}%'`
+				);
+				const searchs = new Array(res.length);
+				for (let i = 0; i < res.length; i++) {
+				  searchs[i] = {
+				    key: userTable.keyDeserializer(res[i].key),
+				    value: userTable.valueDeserializer(res[i].value),
+				  };
+				}
+				this.tableData = searchs;
+				console.log("结束模糊匹配");
+				this.loading = false;
+			}
+			// //获取分页数据
+			// async getData(pageCurrent, value = '') {
+			// 	const userTable = await Kvite.buildDefaultKvite('testDb', 'user');
+			// 	this.loading = true;
+			// 	this.pageCurrent = pageCurrent;
+				
+			// 	//最下行
+			// 	const low = (pageCurrent - 1) * this.pageSize;
+			// 	//最上行
+			// 	const heigh = low + this.pageSize + 1;
+			// 	console.log("最高和最低值", low, heigh);
+			// 	console.log("开始查询");
+			// 	const pagingData = await userTable.allpaging(low, heigh);
+			// 	console.log("查询结果", pagingData);
+			// 	this.tableData = pagingData;
+			// 	this.loading = false;
+			// }
 		}
 	}
 </script>
@@ -214,6 +279,7 @@
 		font-size: 14px;
 		color: #333;
 	}
+
 	
 	
 </style>

@@ -141,13 +141,19 @@
 				
 				console.log(await userTable.size());
 				
-				//计算保存数据的key值
-				const keyData = await userTable.size() == 0? 1 : await userTable.size() + 1;
+				//查询最后一个key值
+				const value = await userTable.selectSQL(
+					`SELECT key, value FROM ${userTable.tableName} ORDER BY key DESC LIMIT 1`
+				);
 				
-				console.log(keyData);
+				console.log("查询最后一个key值", value);
+				
+				//计算保存数据的key值
+				const keyData = await userTable.size() == 0? 1 : parseInt(userTable.keyDeserializer(value[0].key)) + 1;
+				
+				console.log("下一保存key值：",keyData);
 				//保存数据
 				await userTable.put(keyData, data);	
-				// await userTable.put(3, data);
 				
 				console.log("数据库中全部值=>", await userTable.values());
 				
