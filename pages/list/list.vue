@@ -147,7 +147,6 @@
 				console.log(keyData);
 				//保存数据
 				await userTable.put(keyData, data);	
-				// await userTable.put(3, data);
 				
 				console.log("数据库中全部值=>", await userTable.values());
 				

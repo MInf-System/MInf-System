@@ -2,7 +2,9 @@
 	<view class="content">
 		<view class="text-area">
 			<text class="title">{{title}}</text>
+			
 			<button size="mini" type="default" @click="delTable"></button>
+			
 			<scroll-view class="scroll-view_H" scroll-x="true" @scroll="scroll" scroll-left="120">
 				<view class="uni-container">
 					<uni-table ref="table" :loading="loading" border stripe type="selection" emptyText="暂无更多数据" @selection-change="selectionChange">
@@ -35,9 +37,6 @@
 							<uni-td>{{ item.value.intention }}</uni-td>
 							<uni-td>
 								<view class="uni-group">
-									<!-- <navigator url="pages/index/updateData?key = key" hover-class="navigator-hover">
-										<button class="uni-button" size="mini" type="primary" @click="updatedata(item.key)">修改</button>
-									</navigator> -->
 									<button class="uni-button" size="mini" type="primary" @click="updatedata(item)">修改</button>
 									<button class="uni-button" size="mini" type="warn" @click="deletedata(item.key)">删除</button>
 								</view>
@@ -46,14 +45,6 @@
 					</uni-table>
 					<view class="uni-pagination-box"><uni-pagination prev-text="前一页" next-text="后一页" show-icon :page-size="pageSize" :current="pageCurrent" :total="total" @change="change" /></view>
 				</view>
-				<!-- <view> -->
-					<!-- 修改弹出框 -->
-					<!-- <uni-popup ref="inputDialog" type="dialog">
-						
-						<uni-popup-dialog ref="inputClose"  mode="input" title="输入修改内容" value="对话框预置提示内容!"
-							placeholder="请输入内容" @confirm="dialogInputConfirm"></uni-popup-dialog>
-					</uni-popup> -->
-				<!-- </view> -->
 			</scroll-view>
 		</view>
 	</view>
@@ -163,9 +154,7 @@
 				console.log("查询结果", pagingData);
 				this.tableData = pagingData;
 				this.loading = false;
-				
 			}
-			
 		}
 	}
 </script>
@@ -214,6 +203,7 @@
 		font-size: 14px;
 		color: #333;
 	}
+
 	
 	
 </style>
