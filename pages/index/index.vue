@@ -3,12 +3,11 @@
 		<view class="text-area">
 			<text class="title">{{title}}</text>
 			
-			<button size="mini" type="default" @click="delTable"></button>
+			<button size="mini" type="default" @click="delTable">批量删除</button>
 			
 			<uni-section title="基本用法" type="line">
 				<uni-search-bar @confirm="search" :focus="true" v-model="searchValue">
-				</uni-search-bar>
-	
+				</uni-search-bar>	
 			</uni-section>
 			
 			<scroll-view class="scroll-view_H" scroll-x="true" @scroll="scroll" scroll-left="120">
@@ -161,7 +160,41 @@
 			},
 			//批量删除
 			delTable() {
-				console.log(this.selectedItems())
+				console.log(this.selectedItems());
+				const items = this.selectedItems();
+				//调用删除
+				this.delTableKV(items);
+				//清空多选框
+				this.selectedIndexs = [];
+			},
+			
+			async delTableKV(datas){
+				console.log("删除的数据为=>", datas);
+				const selLen = datas.length;
+				const dataKey = datas;
+				console.log(selLen);
+				const userTable = await Kvite.buildDefaultKvite('testDb', 'user');
+				console.log("获取数据库")
+				//获取数据库表名
+				const tableName = userTable.tableName;
+				console.log("获取表")
+				const keys = new Array(selLen);
+				for (let i = 0; i < selLen; i++) {
+					keys[i] = userTable.keySerializer(dataKey[i].key);
+				};
+				console.log("输出key列表=>", keys);
+				/* const obj = Object.assign(keys);
+				console.log("输出key列表=>", obj); */
+				console.log("开始批量删除");
+				await userTable.executeSQL(
+					`DELETE FROM ${userTable.tableName} WHERE key IN (${keys.map(key => `'${key}'`).join(',')})`
+				);
+				console.log("删除结束")
+				//查询总记录数
+				const all = await userTable.size();
+				console.log("总数据", all);
+				//重新访问分页数据
+				this.getData(1);
 			},
 			// // 分页触发
 			// change(e) {
@@ -170,6 +203,7 @@
 			// 	this.selectedIndexs.length = 0;
 			// 	this.getData(e.current);
 			// },
+
 			scroll: function(e) {
 				// console.log(e)
 				// this.old.scrollTop = e.detail.scrollTop
@@ -180,6 +214,7 @@
 				const userTable = await Kvite.buildDefaultKvite('testDb', 'user');
 				
 				this.loading = true;
+
 				if(value.length == 0){
 					console.log("非搜索查询");
 					const pagingData = await userTable.entries();
