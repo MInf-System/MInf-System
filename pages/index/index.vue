@@ -7,8 +7,7 @@
 			
 			<uni-section title="基本用法" type="line">
 				<uni-search-bar @confirm="search" :focus="true" v-model="searchValue">
-				</uni-search-bar>
-	
+				</uni-search-bar>	
 			</uni-section>
 			
 			<scroll-view class="scroll-view_H" scroll-x="true" @scroll="scroll" scroll-left="120">
@@ -170,6 +169,7 @@
 			// 	this.selectedIndexs.length = 0;
 			// 	this.getData(e.current);
 			// },
+
 			scroll: function(e) {
 				// console.log(e)
 				// this.old.scrollTop = e.detail.scrollTop
@@ -180,6 +180,7 @@
 				const userTable = await Kvite.buildDefaultKvite('testDb', 'user');
 				
 				this.loading = true;
+
 				if(value.length == 0){
 					console.log("非搜索查询");
 					const pagingData = await userTable.entries();
