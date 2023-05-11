@@ -104,12 +104,25 @@
 					habit: '',
 					intention: ''
 				},
-				restData: {},
+				restData: {
+					villageName: '',
+					operator: '',
+					consumption: '',
+					handle: '',
+					maturityTime: '',
+					age: '',
+					number: '',
+					allConsumption: '',
+					situation: '',
+					telephone: '',
+					habit: '',
+					intention: ''
+				},
 				phoneInvalid: false
 			}
 		},
 		onLoad() {
-			this.restData = this.tableData;
+			
 		},
 		methods: {
 			validatePhone() {
@@ -139,23 +152,33 @@
 				//创建数据库对象和数据库对象的表对象
 				const userTable = await Kvite.buildDefaultKvite('testDb', 'user');
 				
-				console.log(await userTable.size());
+				const keyLength = await userTable.size()
+				console.log(keyLength);
+				
+				console.log("数据库中全部值=>", await userTable.entries());
 				
 				//查询最后一个key值
-				const value = await userTable.selectSQL(
-					`SELECT key, value FROM ${userTable.tableName} ORDER BY key DESC LIMIT 1`
-				);
+				// const value = await userTable.selectSQL(
+				// 	`SELECT key, value FROM ${userTable.tableName} ORDER BY json_extract(key, '$.property') DESC LIMIT 1`
+				// );
+				const keys = await userTable.keys();
+				console.log("所有key值：", keys);
+				let keyMax = parseInt(keys[0]);
+				for(let i = 1; i < keyLength; i++){
+					const currentKey = parseInt(keys[i]);
+					if(currentKey > keyMax){
+						keyMax = currentKey;
+					}
+				};
 				
-				console.log("查询最后一个key值", value);
+				console.log("查询最大一个key值", keyMax);
 				
 				//计算保存数据的key值
-				const keyData = await userTable.size() == 0? 1 : parseInt(userTable.keyDeserializer(value[0].key)) + 1;
+				const keyData = await userTable.size() == 0? 1 : keyMax + 1;
 				
 				console.log("下一保存key值：",keyData);
 				//保存数据
 				await userTable.put(keyData, data);	
-				
-				console.log("数据库中全部值=>", await userTable.values());
 				
 				// 还未实现
 				// TODO 判断文件是否存在，如果不存在则创建空文件
